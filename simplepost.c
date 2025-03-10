@@ -72,7 +72,6 @@ iterate_post (void *coninfo_cls, enum MHD_ValueKind kind, const char *key,
               const char *transfer_encoding, const char *data, uint64_t off,
               size_t size)
 {
-  struct connection_info_struct *con_info = coninfo_cls;
   (void) kind;               /* Unused. Silent compiler warning. */
   (void) filename;           /* Unused. Silent compiler warning. */
   (void) content_type;       /* Unused. Silent compiler warning. */
@@ -81,7 +80,12 @@ iterate_post (void *coninfo_cls, enum MHD_ValueKind kind, const char *key,
 
 #define DEVNULL
 #ifdef DEVNULL
+  (void) coninfo_cls;               /* Unused. Silent compiler warning. */
+  (void) data;               /* Unused. Silent compiler warning. */
+  (void) key;               /* Unused. Silent compiler warning. */
+  (void) size;               /* Unused. Silent compiler warning. */
 #else
+  struct connection_info_struct *con_info = coninfo_cls;
   if (0 == strcmp (key, "name"))
   {
     if ((size > 0) && (size <= MAXNAMESIZE))
