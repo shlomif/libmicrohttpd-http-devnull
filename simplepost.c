@@ -18,6 +18,7 @@
 #define snprintf _snprintf
 #endif
 
+#define DEVNULL 1
 #define PORT            8888
 #define POSTBUFFERSIZE  512
 #define MAXNAMESIZE     20
@@ -29,7 +30,9 @@
 struct connection_info_struct
 {
   int connectiontype;
+#ifndef DEVNULL
   char *answerstring;
+#endif
   struct MHD_PostProcessor *postprocessor;
 };
 
@@ -78,7 +81,6 @@ iterate_post (void *coninfo_cls, enum MHD_ValueKind kind, const char *key,
   (void) transfer_encoding;  /* Unused. Silent compiler warning. */
   (void) off;                /* Unused. Silent compiler warning. */
 
-#define DEVNULL
 #ifdef DEVNULL
   (void) coninfo_cls;               /* Unused. Silent compiler warning. */
   (void) data;               /* Unused. Silent compiler warning. */
@@ -124,8 +126,10 @@ request_completed (void *cls, struct MHD_Connection *connection,
   if (con_info->connectiontype == POST)
   {
     MHD_destroy_post_processor (con_info->postprocessor);
+#ifndef DEVNULL
     if (con_info->answerstring)
       free (con_info->answerstring);
+#endif
   }
 
   free (con_info);
@@ -150,7 +154,9 @@ answer_to_connection (void *cls, struct MHD_Connection *connection,
     con_info = malloc (sizeof (struct connection_info_struct));
     if (NULL == con_info)
       return MHD_NO;
+#ifndef DEVNULL
     con_info->answerstring = NULL;
+#endif
 
     if (0 == strcmp (method, "POST"))
     {
@@ -194,8 +200,10 @@ answer_to_connection (void *cls, struct MHD_Connection *connection,
 
       return MHD_YES;
     }
+#ifndef DEVNULL
     else if (NULL != con_info->answerstring)
       return send_page (connection, con_info->answerstring);
+#endif
   }
 
   return send_page (connection, errorpage);
