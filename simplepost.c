@@ -79,6 +79,9 @@ iterate_post (void *coninfo_cls, enum MHD_ValueKind kind, const char *key,
   (void) transfer_encoding;  /* Unused. Silent compiler warning. */
   (void) off;                /* Unused. Silent compiler warning. */
 
+#define DEVNULL
+#ifdef DEVNULL
+#else
   if (0 == strcmp (key, "name"))
   {
     if ((size > 0) && (size <= MAXNAMESIZE))
@@ -96,6 +99,7 @@ iterate_post (void *coninfo_cls, enum MHD_ValueKind kind, const char *key,
 
     return MHD_NO;
   }
+#endif
 
   return MHD_YES;
 }
