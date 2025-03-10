@@ -44,9 +44,6 @@ static const char *askpage =
   "<input type=\"submit\" value=\" Send \"></form>\n"
   "</body></html>";
 
-#define GREETINGPAGE \
-  "<html><body><h1>Welcome, %s!</center></h1></body></html>"
-
 static const char *errorpage =
   "<html><body>This doesn't seem to be right.</body></html>";
 
@@ -87,6 +84,10 @@ iterate_post (void *coninfo_cls, enum MHD_ValueKind kind, const char *key,
   (void) key;               /* Unused. Silent compiler warning. */
   (void) size;               /* Unused. Silent compiler warning. */
 #else
+
+#define GREETINGPAGE \
+  "<html><body><h1>Welcome, %s!</center></h1></body></html>"
+
   struct connection_info_struct *con_info = coninfo_cls;
   if (0 == strcmp (key, "name"))
   {
